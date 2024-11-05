@@ -1,34 +1,35 @@
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
+import javafx.collections.ObservableList; // Nhập ObservableList từ thư viện JavaFX để quản lý danh sách động.
+import javafx.event.ActionEvent; // Nhập ActionEvent để xử lý sự kiện hành động.
+import javafx.fxml.FXML; // Nhập FXML để cho phép sử dụng các chú thích trong file FXML.
+import javafx.scene.control.TableColumn; // Nhập TableColumn để tạo các cột trong TableView.
+import javafx.scene.control.TableView; // Nhập TableView để hiển thị danh sách sách.
+import javafx.scene.control.TextField; // Nhập TextField để sử dụng các ô nhập liệu.
+import javafx.scene.control.cell.PropertyValueFactory; // Nhập PropertyValueFactory để gán giá trị cho các ô.
+import javafx.scene.input.MouseEvent; // Nhập MouseEvent để xử lý sự kiện nhấp chuột.
 
-public class Controller {
-
-    @FXML
-    private TextField authorField, nameField, priceField, publisherField, searchField, yearField;
+public class Controller { // Khai báo lớp Controller
 
     @FXML
-    private TableView<Book> booksTable;
+    private TextField authorField, nameField, priceField, publisherField, searchField, yearField; // Khai báo các trường nhập liệu.
 
     @FXML
-    private TableColumn<Book, String> colAuthor, colName, colPublisher;
+    private TableView<Book> booksTable; // Khai báo TableView để hiển thị danh sách sách.
 
     @FXML
-    private TableColumn<Book, Integer> colId, colYear;
+    private TableColumn<Book, String> colAuthor, colName, colPublisher; // Khai báo các cột trong TableView cho các thuộc tính kiểu String.
 
     @FXML
-    private TableColumn<Book, Double> colPrice;
-
-    private ObservableList<Book> bookList;
-    private DatabaseHandler databaseHandler; // Khai báo DatabaseHandler
+    private TableColumn<Book, Integer> colId, colYear; // Khai báo các cột trong TableView cho các thuộc tính kiểu Integer.
 
     @FXML
-    public void initialize() {
+    private TableColumn<Book, Double> colPrice; // Khai báo cột giá sách kiểu Double.
+
+    private ObservableList<Book> bookList; // Danh sách sách sẽ được hiển thị trong TableView.
+    private DatabaseHandler databaseHandler; // Khai báo đối tượng DatabaseHandler để tương tác với cơ sở dữ liệu.
+
+    @FXML
+    public void initialize() { // Phương thức khởi tạo sẽ được gọi tự động khi lớp được khởi tạo.
+        // Gán giá trị cho các cột của TableView bằng cách sử dụng PropertyValueFactory.
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
         colName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -36,28 +37,28 @@ public class Controller {
         colYear.setCellValueFactory(new PropertyValueFactory<>("year"));
         colPrice.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        databaseHandler = new DatabaseHandler(); // Khởi tạo DatabaseHandler
-        loadBooks(); // Tải sách từ cơ sở dữ liệu
+        databaseHandler = new DatabaseHandler(); // Khởi tạo đối tượng DatabaseHandler để kết nối với cơ sở dữ liệu.
+        loadBooks(); // Tải danh sách sách từ cơ sở dữ liệu.
 
-        // Thêm sự kiện khi nhấn vào hàng
+        // Thêm sự kiện khi nhấn vào hàng trong TableView.
         booksTable.setOnMouseClicked(this::handleBookSelection);
 
+        // Thêm listener cho ô tìm kiếm, gọi lại phương thức tìm kiếm khi người dùng nhập vào ô tìm kiếm.
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            handleSearch(new ActionEvent()); // Gọi lại phương thức tìm kiếm
+            handleSearch(new ActionEvent()); // Gọi phương thức tìm kiếm khi ô tìm kiếm thay đổi.
         });
-        
     }
 
-    private void loadBooks() {
-        bookList = databaseHandler.getAllBooks();
-        booksTable.setItems(bookList);
+    private void loadBooks() { // Phương thức tải sách từ cơ sở dữ liệu.
+        bookList = databaseHandler.getAllBooks(); // Lấy danh sách tất cả sách từ cơ sở dữ liệu.
+        booksTable.setItems(bookList); // Đặt danh sách sách vào TableView.
     }
 
-    // Xử lý khi người dùng nhấn vào sách trong danh sách
+    // Xử lý khi người dùng nhấn vào sách trong danh sách.
     private void handleBookSelection(MouseEvent event) {
-        Book selectedBook = booksTable.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            // Điền thông tin vào các trường
+        Book selectedBook = booksTable.getSelectionModel().getSelectedItem(); // Lấy sách đã chọn từ TableView.
+        if (selectedBook != null) { // Kiểm tra xem có sách nào được chọn hay không.
+            // Điền thông tin vào các trường nhập liệu.
             nameField.setText(selectedBook.getName());
             authorField.setText(selectedBook.getAuthor());
             publisherField.setText(selectedBook.getPublisher());
@@ -67,71 +68,70 @@ public class Controller {
     }
 
     @FXML
-    void handleAdd(ActionEvent event) {
-        String name = nameField.getText();
-        String author = authorField.getText();
-        String publisher = publisherField.getText();
-        int year = Integer.parseInt(yearField.getText());
-        double price = Double.parseDouble(priceField.getText());
+    void handleAdd(ActionEvent event) { // Phương thức xử lý khi nhấn nút thêm.
+        String name = nameField.getText(); // Lấy tên sách từ ô nhập liệu.
+        String author = authorField.getText(); // Lấy tên tác giả từ ô nhập liệu.
+        String publisher = publisherField.getText(); // Lấy nhà xuất bản từ ô nhập liệu.
+        int year = Integer.parseInt(yearField.getText()); // Lấy năm từ ô nhập liệu và chuyển đổi thành kiểu số nguyên.
+        double price = Double.parseDouble(priceField.getText()); // Lấy giá sách từ ô nhập liệu và chuyển đổi thành kiểu số thực.
 
-        Book newBook = new Book(0, name, author, publisher, year, price); // ID sẽ được tự động sinh
-        databaseHandler.addBook(newBook); // Thêm vào cơ sở dữ liệu
-        bookList.add(newBook); // Cập nhật danh sách hiển thị
-        clearFields();
-        loadBooks(); // Tải lại danh sách sách từ cơ sở dữ liệu
+        Book newBook = new Book(0, name, author, publisher, year, price); // Tạo đối tượng Book mới, ID sẽ được tự động sinh.
+        databaseHandler.addBook(newBook); // Thêm sách mới vào cơ sở dữ liệu.
+        bookList.add(newBook); // Cập nhật danh sách hiển thị với sách mới.
+        clearFields(); // Xóa các trường nhập liệu.
+        loadBooks(); // Tải lại danh sách sách từ cơ sở dữ liệu để đảm bảo tính đồng bộ.
     }
 
     @FXML
-    void handleDelete(ActionEvent event) {
-        Book selectedBook = booksTable.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
-            databaseHandler.deleteBook(selectedBook.getId()); // Xóa khỏi cơ sở dữ liệu
-            bookList.remove(selectedBook); // Cập nhật danh sách hiển thị
-            loadBooks(); // Tải lại danh sách sách từ cơ sở dữ liệu
+    void handleDelete(ActionEvent event) { // Phương thức xử lý khi nhấn nút xóa.
+        Book selectedBook = booksTable.getSelectionModel().getSelectedItem(); // Lấy sách đã chọn từ TableView.
+        if (selectedBook != null) { // Kiểm tra xem có sách nào được chọn hay không.
+            databaseHandler.deleteBook(selectedBook.getId()); // Xóa sách khỏi cơ sở dữ liệu.
+            bookList.remove(selectedBook); // Cập nhật danh sách hiển thị bằng cách xóa sách đã chọn.
+            loadBooks(); // Tải lại danh sách sách từ cơ sở dữ liệu.
         }
     }
 
     @FXML
-    void handleSearch(ActionEvent event) {
-        String keyword = searchField.getText().toLowerCase();
+    void handleSearch(ActionEvent event) { // Phương thức xử lý tìm kiếm.
+        String keyword = searchField.getText().toLowerCase(); // Lấy từ khóa tìm kiếm và chuyển đổi thành chữ thường.
     
-        if (keyword.isEmpty()) {
-            // Nếu ô tìm kiếm rỗng, tải lại toàn bộ danh sách sách
-            loadBooks();
+        if (keyword.isEmpty()) { // Kiểm tra xem ô tìm kiếm có rỗng không.
+            loadBooks(); // Nếu ô tìm kiếm rỗng, tải lại toàn bộ danh sách sách.
         } else {
-            // Tìm kiếm theo từ khóa
+            // Tìm kiếm theo từ khóa trong các thuộc tính của sách.
             ObservableList<Book> filteredList = bookList.filtered(book -> 
-                book.getName().toLowerCase().contains(keyword) || 
-                book.getAuthor().toLowerCase().contains(keyword) || 
-                book.getPublisher().toLowerCase().contains(keyword) || 
-                String.valueOf(book.getYear()).contains(keyword) // Tìm kiếm theo năm
+                book.getName().toLowerCase().contains(keyword) || // Tìm kiếm theo tên sách.
+                book.getAuthor().toLowerCase().contains(keyword) || // Tìm kiếm theo tác giả.
+                book.getPublisher().toLowerCase().contains(keyword) || // Tìm kiếm theo nhà xuất bản.
+                String.valueOf(book.getYear()).contains(keyword) // Tìm kiếm theo năm.
             );
-            booksTable.setItems(filteredList);
+            booksTable.setItems(filteredList); // Cập nhật TableView với danh sách sách đã lọc.
         }
     }
-    
 
     @FXML
-    void handleUpdate(ActionEvent event) {
-        Book selectedBook = booksTable.getSelectionModel().getSelectedItem();
-        if (selectedBook != null) {
+    void handleUpdate(ActionEvent event) { // Phương thức xử lý khi nhấn nút cập nhật.
+        Book selectedBook = booksTable.getSelectionModel().getSelectedItem(); // Lấy sách đã chọn từ TableView.
+        if (selectedBook != null) { // Kiểm tra xem có sách nào được chọn hay không.
+            // Cập nhật các thuộc tính của sách với giá trị từ các trường nhập liệu.
             selectedBook.setName(nameField.getText());
             selectedBook.setAuthor(authorField.getText());
             selectedBook.setPublisher(publisherField.getText());
             selectedBook.setYear(Integer.parseInt(yearField.getText()));
             selectedBook.setPrice(Double.parseDouble(priceField.getText()));
-            databaseHandler.updateBook(selectedBook); // Cập nhật cơ sở dữ liệu
-            booksTable.refresh(); // Cập nhật giao diện
-            clearFields();
-            loadBooks(); // Tải lại danh sách sách từ cơ sở dữ liệu
+            databaseHandler.updateBook(selectedBook); // Cập nhật sách trong cơ sở dữ liệu.
+            booksTable.refresh(); // Cập nhật giao diện TableView.
+            clearFields(); // Xóa các trường nhập liệu.
+            loadBooks(); // Tải lại danh sách sách từ cơ sở dữ liệu.
         }
     }
 
-    private void clearFields() {
-        nameField.clear();
-        authorField.clear();
-        publisherField.clear();
-        yearField.clear();
-        priceField.clear();
+    private void clearFields() { // Phương thức xóa các trường nhập liệu.
+        nameField.clear(); // Xóa tên sách.
+        authorField.clear(); // Xóa tên tác giả.
+        publisherField.clear(); // Xóa nhà xuất bản.
+        yearField.clear(); // Xóa năm xuất bản.
+        priceField.clear(); // Xóa giá sách.
     }
 }
