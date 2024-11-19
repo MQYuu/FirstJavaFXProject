@@ -1,31 +1,29 @@
-import javafx.collections.ObservableList; // Nhập ObservableList từ thư viện JavaFX để quản lý danh sách động.
-import javafx.event.ActionEvent; // Nhập ActionEvent để xử lý sự kiện hành động.
-import javafx.fxml.FXML; // Nhập FXML để cho phép sử dụng các chú thích trong file FXML.
-import javafx.scene.control.TableColumn; // Nhập TableColumn để tạo các cột trong TableView.
-import javafx.scene.control.TableView; // Nhập TableView để hiển thị danh sách sách.
-import javafx.scene.control.TextField; // Nhập TextField để sử dụng các ô nhập liệu.
-import javafx.scene.control.cell.PropertyValueFactory; // Nhập PropertyValueFactory để gán giá trị cho các ô.
-import javafx.scene.input.MouseEvent; // Nhập MouseEvent để xử lý sự kiện nhấp chuột.
+import javafx.collections.ObservableList; 
+import javafx.event.ActionEvent; 
+import javafx.fxml.FXML; 
+import javafx.scene.control.TableColumn; 
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField; 
+import javafx.scene.control.cell.PropertyValueFactory; 
+import javafx.scene.input.MouseEvent; 
 
-public class Controller { // Khai báo lớp Controller
-
-    @FXML
-    private TextField authorField, nameField, priceField, publisherField, searchField, yearField; // Khai báo các trường nhập liệu.
+public class Controller { 
 
     @FXML
-    private TableView<Book> booksTable; // Khai báo TableView để hiển thị danh sách sách.
+    private TextField authorField, nameField, priceField, publisherField, searchField, yearField; 
 
     @FXML
-    private TableColumn<Book, String> colAuthor, colName, colPublisher; // Khai báo các cột trong TableView cho các thuộc tính kiểu String.
+    private TableView<Book> booksTable; 
 
     @FXML
-    private TableColumn<Book, Integer> colId, colYear; // Khai báo các cột trong TableView cho các thuộc tính kiểu Integer.
-
+    private TableColumn<Book, String> colAuthor, colName, colPublisher; 
     @FXML
-    private TableColumn<Book, Double> colPrice; // Khai báo cột giá sách kiểu Double.
+    private TableColumn<Book, Integer> colId, colYear; 
+    @FXML
+    private TableColumn<Book, Double> colPrice; 
 
-    private ObservableList<Book> bookList; // Danh sách sách sẽ được hiển thị trong TableView.
-    private DatabaseHandler databaseHandler; // Khai báo đối tượng DatabaseHandler để tương tác với cơ sở dữ liệu.
+    private ObservableList<Book> bookList;
+    private DatabaseHandler databaseHandler; 
 
     @FXML
     public void initialize() { // Phương thức khởi tạo sẽ được gọi tự động khi lớp được khởi tạo.

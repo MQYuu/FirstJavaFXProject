@@ -1,11 +1,10 @@
-import java.sql.*; // Nhập các lớp SQL để sử dụng cho việc kết nối và thao tác với cơ sở dữ liệu.
-import javafx.collections.FXCollections; // Nhập FXCollections để tạo danh sách quan sát.
-import javafx.collections.ObservableList; // Nhập ObservableList để sử dụng cho danh sách động.
+import java.sql.*; 
+import javafx.collections.FXCollections; 
+import javafx.collections.ObservableList; 
+public class DatabaseHandler { 
+    private Connection connection; 
 
-public class DatabaseHandler { // Khai báo lớp DatabaseHandler để quản lý kết nối và thao tác với cơ sở dữ liệu.
-    private Connection connection; // Khai báo đối tượng Connection để kết nối với cơ sở dữ liệu.
-
-    public DatabaseHandler() { // Constructor của lớp.
+    public DatabaseHandler() {
         connect(); // Gọi phương thức connect để thiết lập kết nối với cơ sở dữ liệu.
     }
 
